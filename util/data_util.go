@@ -3,6 +3,9 @@ package util
 import (
 	"bytes"
 	"encoding/binary"
+	"reflect"
+	"strings"
+	"unicode"
 
 	"github.com/shopspring/decimal"
 )
@@ -104,6 +107,46 @@ func MultiplyDP(value uint16, decimal_places string) float64 {
 		result, _ = mulValue.Mul(decimal.NewFromFloat(0.001)).Float64()
 	case "4":
 		result, _ = mulValue.Mul(decimal.NewFromFloat(0.0001)).Float64()
+	}
+
+	return result
+}
+
+func GetStructFieldNames(i interface{}) []string {
+
+	val := reflect.TypeOf(i)
+	result := make([]string, 0)
+
+	for i := 0; i < val.NumField(); i++ {
+		result = append(result, val.Field(i).Name)
+	}
+
+	return result
+}
+
+func StructToDBColumns(fieldNames []string) []string {
+
+	result := make([]string, 0)
+
+	for _, str := range fieldNames {
+
+		var sb strings.Builder
+
+		for index, r := range str {
+
+			if index == len(str)-1 {
+				sb.WriteRune(r)
+				break
+			}
+
+			if unicode.IsLower(r) && unicode.IsUpper(rune(str[index+1])) {
+				sb.WriteRune(r)
+				sb.WriteString("_")
+			} else {
+				sb.WriteRune(r)
+			}
+		}
+		result = append(result, strings.ToLower(sb.String()))
 	}
 
 	return result

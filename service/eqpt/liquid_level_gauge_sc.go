@@ -1,11 +1,13 @@
 package eqpt
 
 import (
+	"errors"
 	"modbus-tcp-receiver/conf/md"
 	"modbus-tcp-receiver/modbus"
 	"modbus-tcp-receiver/model"
 	"modbus-tcp-receiver/model/dao"
 	"modbus-tcp-receiver/util"
+	"strconv"
 )
 
 func GetLiquidLevelGaugeData(data *md.LiquidLevelGauge, sendType string) dao.LiquidLevelGaugeLog {
@@ -22,6 +24,21 @@ func GetLiquidLevelGaugeData(data *md.LiquidLevelGauge, sendType string) dao.Liq
 	result.Datatime = util.GetLocationTime(util.GetDataTimeSecondToZero(util.GetTimeNow()))
 
 	return result
+}
+
+func AddLiquidLevelGaugeListData(eqptKey string, llgData dao.LiquidLevelGaugeLog) error {
+
+	util.AddLiquidLevelGaugeList.Lock()
+
+	err := llgData.UpdateLiquidLevelGaugeList(eqptKey)
+
+	util.AddLiquidLevelGaugeList.Unlock()
+
+	if err != nil {
+		return errors.New(util.CombineString(strconv.Itoa(llgData.Id), " redis set failure"))
+	}
+
+	return nil
 }
 
 //取得液位計level(水位高度)狀態

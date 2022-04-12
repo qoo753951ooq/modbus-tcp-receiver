@@ -1,11 +1,13 @@
 package eqpt
 
 import (
+	"errors"
 	"modbus-tcp-receiver/conf/md"
 	"modbus-tcp-receiver/modbus"
 	"modbus-tcp-receiver/model"
 	"modbus-tcp-receiver/model/dao"
 	"modbus-tcp-receiver/util"
+	"strconv"
 )
 
 func GetFloatLevelSwitchData(data *md.FloatLevelSwitch, sendType string) dao.FloatLevelSwitchLog {
@@ -19,6 +21,21 @@ func GetFloatLevelSwitchData(data *md.FloatLevelSwitch, sendType string) dao.Flo
 	result.Datatime = util.GetLocationTime(util.GetDataTimeSecondToZero(util.GetTimeNow()))
 
 	return result
+}
+
+func AddFloatLevelSwitchListData(eqptKey string, flsData dao.FloatLevelSwitchLog) error {
+
+	util.AddFloatLevelSwitchList.Lock()
+
+	err := flsData.UpdateFloatLevelSwitchList(eqptKey)
+
+	util.AddFloatLevelSwitchList.Unlock()
+
+	if err != nil {
+		return errors.New(util.CombineString(strconv.Itoa(flsData.Id), " redis set failure"))
+	}
+
+	return nil
 }
 
 //取得液位開關level(水位高度)狀態

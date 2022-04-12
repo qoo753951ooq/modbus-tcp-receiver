@@ -1,11 +1,13 @@
 package eqpt
 
 import (
+	"errors"
 	"modbus-tcp-receiver/conf/md"
 	"modbus-tcp-receiver/modbus"
 	"modbus-tcp-receiver/model"
 	"modbus-tcp-receiver/model/dao"
 	"modbus-tcp-receiver/util"
+	"strconv"
 )
 
 func GetPumpData(data *md.Pump, sendType string) dao.PumpLog {
@@ -17,6 +19,21 @@ func GetPumpData(data *md.Pump, sendType string) dao.PumpLog {
 	result.Datatime = util.GetLocationTime(util.GetDataTimeSecondToZero(util.GetTimeNow()))
 
 	return result
+}
+
+func AddPumpListData(eqptKey string, pData dao.PumpLog) error {
+
+	util.AddPumpList.Lock()
+
+	err := pData.UpdatePumpList(eqptKey)
+
+	util.AddPumpList.Unlock()
+
+	if err != nil {
+		return errors.New(util.CombineString(strconv.Itoa(pData.Id), " redis set failure"))
+	}
+
+	return nil
 }
 
 //取得泵浦狀態

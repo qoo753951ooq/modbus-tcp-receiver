@@ -1,6 +1,12 @@
 package dao
 
-import "time"
+import (
+	"modbus-tcp-receiver/db"
+	"modbus-tcp-receiver/model"
+	"modbus-tcp-receiver/util"
+	"strconv"
+	"time"
+)
 
 type FlowMeterLog struct {
 	Id           int       `orm:"pk;column(id)"`
@@ -16,4 +22,32 @@ type FlowMeterList struct {
 	flow           float64
 	flow_low_alarm float64
 	datatime       time.Time
+}
+
+func (f *FlowMeterLog) UpdateFlowMeterList(eqptListKey string) error {
+
+	key := util.CombineString(eqptListKey, model.Colon, strconv.Itoa(f.Id))
+	fieldNames := util.GetStructFieldNames(FlowMeterList{})
+
+	update := make(map[string]interface{}, 0)
+
+	update[fieldNames[0]] = f.Id
+
+	if f.FlowStatus != model.Not_Equipment_Field_Status {
+		update[fieldNames[1]] = f.FlowStatus
+	}
+
+	if f.Flow != model.Not_Equipment_Field_Value {
+		update[fieldNames[2]] = f.Flow
+	}
+
+	if f.FlowLowAlarm != model.Not_Equipment_Field_Value {
+		update[fieldNames[3]] = f.FlowLowAlarm
+	}
+
+	update[fieldNames[4]] = f.Datatime.Format(util.TimeFormat)
+
+	err := db.RedisHashSet(key, update)
+
+	return err
 }

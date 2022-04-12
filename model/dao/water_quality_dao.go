@@ -1,6 +1,12 @@
 package dao
 
-import "time"
+import (
+	"modbus-tcp-receiver/db"
+	"modbus-tcp-receiver/model"
+	"modbus-tcp-receiver/util"
+	"strconv"
+	"time"
+)
 
 type WaterQualityLog struct {
 	Id          int       `orm:"pk;column(id)"`
@@ -67,4 +73,116 @@ type WaterQualityStatus struct {
 	Ec_status string
 	Rc_status string
 	Tp_status string
+}
+
+func (w *WaterQualityLog) UpdateWaterQualityList(eqptListKey string) error {
+
+	key := util.CombineString(eqptListKey, model.Colon, strconv.Itoa(w.Id))
+	fieldNames := util.GetStructFieldNames(WaterQualityList{})
+
+	update := make(map[string]interface{}, 0)
+
+	update[fieldNames[0]] = w.Id
+
+	if w.SsStatus != model.Not_Equipment_Field_Status {
+		update[fieldNames[1]] = w.SsStatus
+	}
+
+	if w.DoStatus != model.Not_Equipment_Field_Status {
+		update[fieldNames[2]] = w.DoStatus
+	}
+
+	if w.PhStatus != model.Not_Equipment_Field_Status {
+		update[fieldNames[3]] = w.PhStatus
+	}
+
+	if w.EcStatus != model.Not_Equipment_Field_Status {
+		update[fieldNames[4]] = w.EcStatus
+	}
+
+	if w.RcStatus != model.Not_Equipment_Field_Status {
+		update[fieldNames[5]] = w.RcStatus
+	}
+
+	if w.TpStatus != model.Not_Equipment_Field_Status {
+		update[fieldNames[6]] = w.TpStatus
+	}
+
+	if w.Ss != model.Not_Equipment_Field_Value {
+		update[fieldNames[7]] = w.Ss
+	}
+
+	if w.Do != model.Not_Equipment_Field_Value {
+		update[fieldNames[8]] = w.Do
+	}
+
+	if w.Ph != model.Not_Equipment_Field_Value {
+		update[fieldNames[9]] = w.Ph
+	}
+
+	if w.Ec != model.Not_Equipment_Field_Value {
+		update[fieldNames[10]] = w.Ec
+	}
+
+	if w.Rc != model.Not_Equipment_Field_Value {
+		update[fieldNames[11]] = w.Rc
+	}
+
+	if w.Tp != model.Not_Equipment_Field_Value {
+		update[fieldNames[12]] = w.Tp
+	}
+
+	if w.SsHighAlarm != model.Not_Equipment_Field_Value {
+		update[fieldNames[13]] = w.SsHighAlarm
+	}
+
+	if w.SsLowAlarm != model.Not_Equipment_Field_Value {
+		update[fieldNames[14]] = w.SsLowAlarm
+	}
+
+	if w.DoHighAlarm != model.Not_Equipment_Field_Value {
+		update[fieldNames[15]] = w.DoHighAlarm
+	}
+
+	if w.DoLowAlarm != model.Not_Equipment_Field_Value {
+		update[fieldNames[16]] = w.DoLowAlarm
+	}
+
+	if w.PhHighAlarm != model.Not_Equipment_Field_Value {
+		update[fieldNames[17]] = w.PhHighAlarm
+	}
+
+	if w.PhLowAlarm != model.Not_Equipment_Field_Value {
+		update[fieldNames[18]] = w.PhLowAlarm
+	}
+
+	if w.EcHighAlarm != model.Not_Equipment_Field_Value {
+		update[fieldNames[19]] = w.EcHighAlarm
+	}
+
+	if w.EcLowAlarm != model.Not_Equipment_Field_Value {
+		update[fieldNames[20]] = w.EcLowAlarm
+	}
+
+	if w.RcHighAlarm != model.Not_Equipment_Field_Value {
+		update[fieldNames[21]] = w.RcHighAlarm
+	}
+
+	if w.RcLowAlarm != model.Not_Equipment_Field_Value {
+		update[fieldNames[22]] = w.RcLowAlarm
+	}
+
+	if w.TpHighAlarm != model.Not_Equipment_Field_Value {
+		update[fieldNames[23]] = w.TpHighAlarm
+	}
+
+	if w.TpLowAlarm != model.Not_Equipment_Field_Value {
+		update[fieldNames[24]] = w.TpLowAlarm
+	}
+
+	update[fieldNames[25]] = w.Datatime.Format(util.TimeFormat)
+
+	err := db.RedisHashSet(key, update)
+
+	return err
 }

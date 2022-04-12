@@ -1,11 +1,13 @@
 package eqpt
 
 import (
+	"errors"
 	"modbus-tcp-receiver/conf/md"
 	"modbus-tcp-receiver/modbus"
 	"modbus-tcp-receiver/model"
 	"modbus-tcp-receiver/model/dao"
 	"modbus-tcp-receiver/util"
+	"strconv"
 )
 
 func GetWaterQualityData(data *md.WaterQuality, sendType string) dao.WaterQualityLog {
@@ -45,6 +47,21 @@ func GetWaterQualityData(data *md.WaterQuality, sendType string) dao.WaterQualit
 	result.Datatime = util.GetLocationTime(util.GetDataTimeSecondToZero(util.GetTimeNow()))
 
 	return result
+}
+
+func AddWaterQualityListData(eqptKey string, wqData dao.WaterQualityLog) error {
+
+	util.AddWaterQualityList.Lock()
+
+	err := wqData.UpdateWaterQualityList(eqptKey)
+
+	util.AddWaterQualityList.Unlock()
+
+	if err != nil {
+		return errors.New(util.CombineString(strconv.Itoa(wqData.Id), " redis set failure"))
+	}
+
+	return nil
 }
 
 func getWaterQualityStatus(data *md.WaterQuality, sendType string) dao.WaterQualityStatus {

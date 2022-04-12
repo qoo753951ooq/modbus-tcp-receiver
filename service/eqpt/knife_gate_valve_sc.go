@@ -1,11 +1,13 @@
 package eqpt
 
 import (
+	"errors"
 	"modbus-tcp-receiver/conf/md"
 	"modbus-tcp-receiver/modbus"
 	"modbus-tcp-receiver/model"
 	"modbus-tcp-receiver/model/dao"
 	"modbus-tcp-receiver/util"
+	"strconv"
 )
 
 func GetKnifeGeteValveData(data *md.KnifeGateValve, sendType string) dao.KnifeGateValveLog {
@@ -18,6 +20,21 @@ func GetKnifeGeteValveData(data *md.KnifeGateValve, sendType string) dao.KnifeGa
 	result.Datatime = util.GetLocationTime(util.GetDataTimeSecondToZero(util.GetTimeNow()))
 
 	return result
+}
+
+func AddKnifeGeteValveListData(eqptKey string, kgvData dao.KnifeGateValveLog) error {
+
+	util.AddKnifeGeteValveList.Lock()
+
+	err := kgvData.UpdateKnifeGateValveList(eqptKey)
+
+	util.AddKnifeGeteValveList.Unlock()
+
+	if err != nil {
+		return errors.New(util.CombineString(strconv.Itoa(kgvData.Id), " redis set failure"))
+	}
+
+	return nil
 }
 
 //取得閘刀閥狀態

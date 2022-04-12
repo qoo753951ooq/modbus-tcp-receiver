@@ -1,11 +1,13 @@
 package eqpt
 
 import (
+	"errors"
 	"modbus-tcp-receiver/conf/md"
 	"modbus-tcp-receiver/modbus"
 	"modbus-tcp-receiver/model"
 	"modbus-tcp-receiver/model/dao"
 	"modbus-tcp-receiver/util"
+	"strconv"
 )
 
 func GetMachineData(data *md.Machine, sendType string) dao.MachineLog {
@@ -17,6 +19,21 @@ func GetMachineData(data *md.Machine, sendType string) dao.MachineLog {
 	result.Datatime = util.GetLocationTime(util.GetDataTimeSecondToZero(util.GetTimeNow()))
 
 	return result
+}
+
+func AddMachineListData(eqptKey string, mData dao.MachineLog) error {
+
+	util.AddMachineList.Lock()
+
+	err := mData.UpdateMachineList(eqptKey)
+
+	util.AddMachineList.Unlock()
+
+	if err != nil {
+		return errors.New(util.CombineString(strconv.Itoa(mData.Id), " redis set failure"))
+	}
+
+	return nil
 }
 
 //取得機器狀態

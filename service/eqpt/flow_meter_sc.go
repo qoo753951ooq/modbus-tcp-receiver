@@ -1,11 +1,13 @@
 package eqpt
 
 import (
+	"errors"
 	"modbus-tcp-receiver/conf/md"
 	"modbus-tcp-receiver/modbus"
 	"modbus-tcp-receiver/model"
 	"modbus-tcp-receiver/model/dao"
 	"modbus-tcp-receiver/util"
+	"strconv"
 )
 
 func GetFlowMeterData(data *md.FlowMeter, sendType string) dao.FlowMeterLog {
@@ -19,6 +21,21 @@ func GetFlowMeterData(data *md.FlowMeter, sendType string) dao.FlowMeterLog {
 	result.Datatime = util.GetLocationTime(util.GetDataTimeSecondToZero(util.GetTimeNow()))
 
 	return result
+}
+
+func AddFlowMeterListData(eqptKey string, fmData dao.FlowMeterLog) error {
+
+	util.AddFlowMeterList.Lock()
+
+	err := fmData.UpdateFlowMeterList(eqptKey)
+
+	util.AddFlowMeterList.Unlock()
+
+	if err != nil {
+		return errors.New(util.CombineString(strconv.Itoa(fmData.Id), " redis set failure"))
+	}
+
+	return nil
 }
 
 //取得流量計流量狀態
