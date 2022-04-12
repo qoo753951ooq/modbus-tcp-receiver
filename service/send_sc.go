@@ -28,6 +28,9 @@ func sendData(confData conf.Configuration, sendType string) {
 	sendPump(confData, sendType)
 	sendFLS(confData, sendType)
 	sendLLG(confData, sendType)
+	sendFM(confData, sendType)
+	sendWQ(confData, sendType)
+	sendMachine(confData, sendType)
 }
 
 func sendKGV(confData conf.Configuration, sendType string) {
@@ -59,5 +62,29 @@ func sendLLG(confData conf.Configuration, sendType string) {
 	for _, data := range confData.LiquidLevelGauges {
 		llgData := eqpt.GetLiquidLevelGaugeData(data, sendType)
 		fmt.Printf("%v \n", llgData)
+	}
+}
+
+func sendFM(confData conf.Configuration, sendType string) {
+
+	for _, data := range confData.FlowMeters {
+		fmData := eqpt.GetFlowMeterData(data, sendType)
+		fmt.Printf("%v \n", fmData)
+	}
+}
+
+func sendWQ(confData conf.Configuration, sendType string) {
+
+	for _, data := range confData.WaterQualitys {
+		wqData := eqpt.GetWaterQualityData(data, sendType)
+		fmt.Printf("%v \n", wqData)
+	}
+}
+
+func sendMachine(confData conf.Configuration, sendType string) {
+
+	for _, data := range confData.Machines {
+		mData := eqpt.GetMachineData(data, sendType)
+		fmt.Printf("%v \n", mData)
 	}
 }
