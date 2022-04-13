@@ -1,0 +1,492 @@
+{	
+	"param":{
+		"cron_real_time_spec": "*/1 * * * *",
+		"cron_history_spec": "*/10 * * * *",
+		"modbus_ip": "xxx.xxx.xxx.xxx:502",
+		"redis":{
+			"ip": "xxx.xxx.xxx.xxx:6379",
+			"pwd": "testPwd", 
+			"db": 1,
+			"equipment_key":[
+				"knife_gate_valve_list",
+				"pump_list",
+				"float_level_switch_list",
+				"liquid_level_gauge_list",
+				"flow_meter_list",
+				"water_quality_list",
+				"machine_list"
+			]
+		},
+		"postgres":{
+			"data_source": "user=postgres password=postgres host=xxx.xxx.xxx.xxx port=5432 dbname=test_system sslmode=disable"
+		}	
+	},
+	"knife_gate_valve":[
+		{
+			"id": 1,
+			"name": "閘",
+			"status":[
+				{
+					"name": "status",
+					"address": 2002,
+					"data":[
+						{
+							"name": "all-open",
+							"index": 0
+						},
+						{
+							"name": "all-close",
+							"index": 1
+						},
+						{
+							"name": "error",
+							"index": 2
+						}
+					]
+				}
+			],
+			"value":[
+				{
+					"name": "opening",
+					"address": 3011,
+					"decimal_places": "2"
+				}
+			]
+		},
+		{
+			"id": 2,
+			"name": "閥",
+			"status":[
+				{
+					"name": "status",
+					"address": 2003,
+					"data":[
+						{
+							"name": "all-open",
+							"index": 0
+						},
+						{
+							"name": "all-close",
+							"index": 1
+						},
+						{
+							"name": "error",
+							"index": 2
+						}
+					]
+				}
+			],
+			"value":[
+				{
+					"name": "opening",
+					"address": 3012,
+					"decimal_places": "2"
+				}
+			]
+		}
+	],
+	"pump":[
+		{
+			"id": 1,
+			"name": "A泵",
+			"status":[
+				{
+					"name": "status",
+					"address": 1,
+					"data":[
+						{
+							"name": "start",
+							"index": 0
+						},
+						{
+							"name": "error",
+							"index": 1
+						}		
+					]
+				}
+			]
+		},
+		{
+			"id": 2,
+			"name": "B泵",
+			"status":[
+				{
+					"name": "status",
+					"address": 2,
+					"data":[
+						{
+							"name": "start",
+							"index": 0
+						},
+						{
+							"name": "error",
+							"index": 1
+						}		
+					]
+				}
+			]
+		}
+	],
+	"float_level_switch":[
+		{
+			"id": 1,
+			"name": "浮球開關",
+			"status":[
+				{
+					"name": "level",
+					"address": 500,
+					"data":[
+						{
+							"name": "ll-level",
+							"index": 0		
+						},
+						{
+							"name": "l-level",
+							"index": 1
+						},
+						{
+							"name": "m-level",
+							"index": 2
+						},
+						{
+							"name": "h-level",
+							"index": 3
+						},
+						{
+							"name": "hh-level",
+							"index": 4
+						}
+					]
+				},
+				{
+					"name": "alarm",
+					"address": 800,
+					"data":[
+						{
+							"name": "ll-alarm",
+							"index": 0
+						},
+						{								
+							"name": "hh-alarm",
+							"index": 1
+						}
+					]
+				}
+			],
+			"level_mode": "LL,L,M,H,HH"
+		}
+	],
+	"liquid_level_gauge":[
+		{
+			"id": 1,
+			"name": "A液位計",
+			"status":[
+				{
+					"name": "level",
+					"address": 500,
+					"data":[
+						{
+							"name": "ll-level",
+							"index": 0		
+						},
+						{
+							"name": "l-level",
+							"index": 1
+						},
+						{
+							"name": "m-level",
+							"index": 2
+						},
+						{
+							"name": "h-level",
+							"index": 3
+						},
+						{
+							"name": "hh-level",
+							"index": 4
+						}
+					]
+				},
+				{
+					"name": "alarm",
+					"address": 802,
+					"data":[
+						{
+							"name": "ll-alarm",
+							"index": 0
+						},
+						{								
+							"name": "hh-alarm",
+							"index": 1
+						}
+					]
+				}
+			],
+			"value":[
+				{
+					"name": "liquid",
+					"address": 1004,
+					"decimal_places": "2"
+				},
+				{
+					"name": "liquid-high-alarm",
+					"address": 1516,
+					"decimal_places": "2"
+				},
+				{
+					"name": "liquid-low-alarm",
+					"address": 1519,
+					"decimal_places": "2"
+				}
+			],
+			"level_mode": "LL,L,M,H,HH"
+		},
+		{
+			"id": 2,
+			"name": "B液位計",
+			"status":[
+				{
+					"name": "level",
+					"address": 2502,
+					"data":[
+						{
+							"name": "ll-level",
+							"index": 0		
+						},
+						{
+							"name": "l-level",
+							"index": 1
+						},
+						{
+							"name": "h-level",
+							"index": 3
+						},
+						{
+							"name": "hh-level",
+							"index": 4
+						}
+					]
+				},
+				{
+					"name": "alarm",
+					"address": 2802,
+					"data":[
+						{
+							"name": "ll-alarm",
+							"index": 0
+						},
+						{								
+							"name": "hh-alarm",
+							"index": 1
+						}
+					]
+				}
+			],
+			"value":[
+				{
+					"name": "liquid",
+					"address": 3006,
+					"decimal_places": "2"
+				},
+				{
+					"name": "liquid-high-alarm",
+					"address": 3524,
+					"decimal_places": "2"
+				},
+				{
+					"name": "liquid-low-alarm",
+					"address": 3527,
+					"decimal_places": "2"
+				}
+			],
+			"level_mode": "LL,L,H,HH"
+		}
+	],
+	"flow_meter":[
+		{
+			"id": 1,
+			"name": "流量計",
+			"status":[
+				{
+					"name": "status",
+					"address": 800,
+					"data":[
+						{
+							"name": "flow-low-alarm",
+							"index": 0
+						}		
+					]
+				}
+			],
+			"value":[
+				{
+					"name": "flow",
+					"address": 1015,
+					"decimal_places": "0"
+				},
+				{
+					"name": "flow-low-alarm",
+					"address": 1500,
+					"decimal_places": "0"
+				}
+			]
+		}
+	],
+	"water_quality":[
+		{
+			"id": 1,
+			"name": "水質",
+			"status":[
+				{
+					"name": "status",
+					"address": 2800,
+					"data":[
+						{
+							"name": "ph-high-alarm",
+							"index": 0
+						},
+						{
+							"name": "ph-low-alarm",
+							"index": 3
+						},					
+						{
+							"name": "ss-high-alarm",
+							"index": 8
+						},
+						{
+							"name": "ss-low-alarm",
+							"index": 11
+						},
+						{
+							"name": "do-high-alarm",
+							"index": 12
+						},
+						{
+							"name": "do-low-alarm",
+							"index": 15
+						}
+					]
+				}
+			],
+			"value":[
+				{
+					"name": "ph",
+					"address": 3000,
+					"decimal_places": "2"
+				},
+				{
+					"name": "ss",
+					"address": 3002,
+					"decimal_places": "2"
+				},
+				{
+					"name": "do",
+					"address": 3003,
+					"decimal_places": "2"
+				},
+				{
+					"name": "ec",
+					"address": 3004,
+					"decimal_places": "0"
+				},
+				{
+					"name": "rc",
+					"address": 3005,
+					"decimal_places": "2"
+				},
+				{
+					"name": "ph-high-alarm",
+					"address": 3500,
+					"decimal_places": "2"
+				},
+				{
+					"name": "ph-low-alarm",
+					"address": 3503,
+					"decimal_places": "2"
+				},
+				{
+					"name": "ss-high-alarm",
+					"address": 3508,
+					"decimal_places": "2"
+				},
+				{
+					"name": "ss-low-alarm",
+					"address": 3511,
+					"decimal_places": "2"
+				},
+				{
+					"name": "do-high-alarm",
+					"address": 3512,
+					"decimal_places": "2"
+				},
+				{
+					"name": "do-low-alarm",
+					"address": 3515,
+					"decimal_places": "2"
+				},
+				{
+					"name": "ec-high-alarm",
+					"address": 3516,
+					"decimal_places": "0"
+				},
+				{
+					"name": "ec-low-alarm",
+					"address": 3519,
+					"decimal_places": "0"
+				},
+				{
+					"name": "rc-high-alarm",
+					"address": 3520,
+					"decimal_places": "2"
+				},
+				{
+					"name": "rc-low-alarm",
+					"address": 3523,
+					"decimal_places": "2"
+				}			
+			]
+		}
+	],
+	"machine":[
+		{
+			"id": 1,
+			"name": "加藥機",
+			"status":[
+				{
+					"name": "status",
+					"address": 2004,
+					"data":[
+						{
+							"name": "start",
+							"index": 0
+						},
+						{
+							"name": "error",
+							"index": 1
+						}	
+					]
+				}
+			]
+		},
+		{
+			"id": 2,
+			"name": "鼓風機",
+			"status":[
+				{
+					"name": "status",
+					"address": 2008,
+					"data":[
+						{
+							"name": "start",
+							"index": 0
+						},
+						{
+							"name": "error",
+							"index": 1
+						}	
+					]
+				}
+			]
+		}
+	]
+}

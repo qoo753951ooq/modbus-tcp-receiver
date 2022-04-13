@@ -6,6 +6,9 @@ import (
 	"modbus-tcp-receiver/util"
 	"strconv"
 	"time"
+
+	"github.com/astaxie/beego/orm"
+	"github.com/elgris/sqrl"
 )
 
 type PumpLog struct {
@@ -37,4 +40,23 @@ func (l *PumpLog) UpdatePumpList(eqptListKey string) error {
 
 	err := db.RedisHashSet(key, update)
 	return err
+}
+
+func (l *PumpLog) InsertPumpLog() (int64, error) {
+
+	builder := sqrl.
+		Insert(`pump_logs.pump_log`).
+		Columns(`id, status, datatime`).
+		Values(l.Id, l.Status, l.Datatime)
+
+	sqlStatement, args, _ := builder.ToSql()
+
+	result, err := orm.NewOrm().Raw(sqlStatement, args).Exec()
+
+	if err != nil {
+		return 0, err
+	} else {
+		num, _ := result.RowsAffected()
+		return num, nil
+	}
 }

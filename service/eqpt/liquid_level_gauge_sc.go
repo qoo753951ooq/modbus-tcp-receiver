@@ -41,6 +41,20 @@ func AddLiquidLevelGaugeListData(eqptKey string, llgData dao.LiquidLevelGaugeLog
 	return nil
 }
 
+func AddLiquidLevelGaugeLogData(llgData dao.LiquidLevelGaugeLog) error {
+
+	util.AddLiquidLevelGaugeLog.Lock()
+
+	_, err := llgData.InsertLiquidLevelGaugeLog()
+
+	util.AddLiquidLevelGaugeLog.Unlock()
+
+	if err != nil {
+		return errors.New(util.CombineString(strconv.Itoa(llgData.Id), " pg insert failure"))
+	}
+	return nil
+}
+
 //取得液位計level(水位高度)狀態
 func getLiquidLevelGaugeStatusForLevel(data *md.LiquidLevelGauge, sendType string) string {
 	var levelData *md.Status

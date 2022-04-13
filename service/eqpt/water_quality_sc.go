@@ -64,6 +64,20 @@ func AddWaterQualityListData(eqptKey string, wqData dao.WaterQualityLog) error {
 	return nil
 }
 
+func AddWaterQualityLogData(wqData dao.WaterQualityLog) error {
+
+	util.AddWaterQualityLog.Lock()
+
+	_, err := wqData.InsertWaterQualityLog()
+
+	util.AddWaterQualityLog.Unlock()
+
+	if err != nil {
+		return errors.New(util.CombineString(strconv.Itoa(wqData.Id), " pg insert failure"))
+	}
+	return nil
+}
+
 func getWaterQualityStatus(data *md.WaterQuality, sendType string) dao.WaterQualityStatus {
 
 	var statusData *md.Status

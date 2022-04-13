@@ -38,6 +38,20 @@ func AddFlowMeterListData(eqptKey string, fmData dao.FlowMeterLog) error {
 	return nil
 }
 
+func AddFlowMeterLogData(fmData dao.FlowMeterLog) error {
+
+	util.AddFlowMeterLog.Lock()
+
+	_, err := fmData.InsertFlowMeterLog()
+
+	util.AddFlowMeterLog.Unlock()
+
+	if err != nil {
+		return errors.New(util.CombineString(strconv.Itoa(fmData.Id), " pg insert failure"))
+	}
+	return nil
+}
+
 //取得流量計流量狀態
 func getFlowMeterFlowStatus(data *md.FlowMeter, sendType string) string {
 	var statusData *md.Status

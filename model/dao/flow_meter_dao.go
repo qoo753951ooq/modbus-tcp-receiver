@@ -6,6 +6,9 @@ import (
 	"modbus-tcp-receiver/util"
 	"strconv"
 	"time"
+
+	"github.com/astaxie/beego/orm"
+	"github.com/elgris/sqrl"
 )
 
 type FlowMeterLog struct {
@@ -50,4 +53,33 @@ func (f *FlowMeterLog) UpdateFlowMeterList(eqptListKey string) error {
 	err := db.RedisHashSet(key, update)
 
 	return err
+}
+
+func (f *FlowMeterLog) InsertFlowMeterLog() (int64, error) {
+
+	builder := sqrl.
+		Insert(`flow_meter_logs.flow_meter_log`).
+		Columns(`id, flow, datatime`).
+		Values(f.Id, f.Flow, f.Datatime)
+
+	if f.FlowStatus != model.Not_Equipment_Field_Status {
+		builder.Columns(`flow_status`)
+		builder.Values(f.FlowStatus)
+	}
+
+	if f.FlowLowAlarm != model.Not_Equipment_Field_Value {
+		builder.Columns(`flow_low_alarm`)
+		builder.Values(f.FlowLowAlarm)
+	}
+
+	sqlStatement, args, _ := builder.ToSql()
+
+	result, err := orm.NewOrm().Raw(sqlStatement, args).Exec()
+
+	if err != nil {
+		return 0, err
+	} else {
+		num, _ := result.RowsAffected()
+		return num, nil
+	}
 }

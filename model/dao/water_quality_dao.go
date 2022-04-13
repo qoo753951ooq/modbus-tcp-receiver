@@ -6,6 +6,9 @@ import (
 	"modbus-tcp-receiver/util"
 	"strconv"
 	"time"
+
+	"github.com/astaxie/beego/orm"
+	"github.com/elgris/sqrl"
 )
 
 type WaterQualityLog struct {
@@ -185,4 +188,143 @@ func (w *WaterQualityLog) UpdateWaterQualityList(eqptListKey string) error {
 	err := db.RedisHashSet(key, update)
 
 	return err
+}
+
+func (w *WaterQualityLog) InsertWaterQualityLog() (int64, error) {
+
+	builder := sqrl.
+		Insert(`water_quality_logs.water_quality_log`).
+		Columns(`id, datatime`).
+		Values(w.Id, w.Datatime)
+
+	if w.SsStatus != model.Not_Equipment_Field_Status {
+		builder.Columns(`ss_status`)
+		builder.Values(w.SsStatus)
+	}
+
+	if w.DoStatus != model.Not_Equipment_Field_Status {
+		builder.Columns(`do_status`)
+		builder.Values(w.DoStatus)
+	}
+
+	if w.PhStatus != model.Not_Equipment_Field_Status {
+		builder.Columns(`ph_status`)
+		builder.Values(w.PhStatus)
+	}
+
+	if w.EcStatus != model.Not_Equipment_Field_Status {
+		builder.Columns(`ec_status`)
+		builder.Values(w.EcStatus)
+	}
+
+	if w.RcStatus != model.Not_Equipment_Field_Status {
+		builder.Columns(`rc_status`)
+		builder.Values(w.RcStatus)
+	}
+
+	if w.TpStatus != model.Not_Equipment_Field_Status {
+		builder.Columns(`tp_status`)
+		builder.Values(w.TpStatus)
+	}
+
+	if w.Ss != model.Not_Equipment_Field_Value {
+		builder.Columns(`ss`)
+		builder.Values(w.Ss)
+	}
+
+	if w.Do != model.Not_Equipment_Field_Value {
+		builder.Columns(`"do"`)
+		builder.Values(w.Do)
+	}
+
+	if w.Ph != model.Not_Equipment_Field_Value {
+		builder.Columns(`ph`)
+		builder.Values(w.Ph)
+	}
+
+	if w.Ec != model.Not_Equipment_Field_Value {
+		builder.Columns(`ec`)
+		builder.Values(w.Ec)
+	}
+
+	if w.Rc != model.Not_Equipment_Field_Value {
+		builder.Columns(`rc`)
+		builder.Values(w.Rc)
+	}
+
+	if w.Tp != model.Not_Equipment_Field_Value {
+		builder.Columns(`tp`)
+		builder.Values(w.Tp)
+	}
+
+	if w.SsHighAlarm != model.Not_Equipment_Field_Value {
+		builder.Columns(`ss_high_alarm`)
+		builder.Values(w.SsHighAlarm)
+	}
+
+	if w.SsLowAlarm != model.Not_Equipment_Field_Value {
+		builder.Columns(`ss_low_alarm`)
+		builder.Values(w.SsLowAlarm)
+	}
+
+	if w.DoHighAlarm != model.Not_Equipment_Field_Value {
+		builder.Columns(`do_high_alarm`)
+		builder.Values(w.DoHighAlarm)
+	}
+
+	if w.DoLowAlarm != model.Not_Equipment_Field_Value {
+		builder.Columns(`do_low_alarm`)
+		builder.Values(w.DoLowAlarm)
+	}
+
+	if w.PhHighAlarm != model.Not_Equipment_Field_Value {
+		builder.Columns(`ph_high_alarm`)
+		builder.Values(w.PhHighAlarm)
+	}
+
+	if w.PhLowAlarm != model.Not_Equipment_Field_Value {
+		builder.Columns(`ph_low_alarm`)
+		builder.Values(w.PhLowAlarm)
+	}
+
+	if w.EcHighAlarm != model.Not_Equipment_Field_Value {
+		builder.Columns(`ec_high_alarm`)
+		builder.Values(w.EcHighAlarm)
+	}
+
+	if w.EcLowAlarm != model.Not_Equipment_Field_Value {
+		builder.Columns(`ec_low_alarm`)
+		builder.Values(w.EcLowAlarm)
+	}
+
+	if w.RcHighAlarm != model.Not_Equipment_Field_Value {
+		builder.Columns(`rc_high_alarm`)
+		builder.Values(w.RcHighAlarm)
+	}
+
+	if w.RcLowAlarm != model.Not_Equipment_Field_Value {
+		builder.Columns(`rc_low_alarm`)
+		builder.Values(w.RcLowAlarm)
+	}
+
+	if w.TpHighAlarm != model.Not_Equipment_Field_Value {
+		builder.Columns(`tp_high_alarm`)
+		builder.Values(w.TpHighAlarm)
+	}
+
+	if w.TpLowAlarm != model.Not_Equipment_Field_Value {
+		builder.Columns(`tp_low_alarm`)
+		builder.Values(w.TpLowAlarm)
+	}
+
+	sqlStatement, args, _ := builder.ToSql()
+
+	result, err := orm.NewOrm().Raw(sqlStatement, args).Exec()
+
+	if err != nil {
+		return 0, err
+	} else {
+		num, _ := result.RowsAffected()
+		return num, nil
+	}
 }

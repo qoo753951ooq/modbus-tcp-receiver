@@ -6,6 +6,9 @@ import (
 	"modbus-tcp-receiver/util"
 	"strconv"
 	"time"
+
+	"github.com/astaxie/beego/orm"
+	"github.com/elgris/sqrl"
 )
 
 type MachineLog struct {
@@ -37,4 +40,23 @@ func (m *MachineLog) UpdateMachineList(eqptListKey string) error {
 
 	err := db.RedisHashSet(key, update)
 	return err
+}
+
+func (m *MachineLog) InsertMachineLog() (int64, error) {
+
+	builder := sqrl.
+		Insert(`machine_logs.machine_log`).
+		Columns(`id, status, datatime`).
+		Values(m.Id, m.Status, m.Datatime)
+
+	sqlStatement, args, _ := builder.ToSql()
+
+	result, err := orm.NewOrm().Raw(sqlStatement, args).Exec()
+
+	if err != nil {
+		return 0, err
+	} else {
+		num, _ := result.RowsAffected()
+		return num, nil
+	}
 }

@@ -37,6 +37,20 @@ func AddKnifeGeteValveListData(eqptKey string, kgvData dao.KnifeGateValveLog) er
 	return nil
 }
 
+func AddKnifeGeteValveLogData(kgvData dao.KnifeGateValveLog) error {
+
+	util.AddKnifeGeteValveLog.Lock()
+
+	_, err := kgvData.InsertKnifeGateValveLog()
+
+	util.AddKnifeGeteValveLog.Unlock()
+
+	if err != nil {
+		return errors.New(util.CombineString(strconv.Itoa(kgvData.Id), " pg insert failure"))
+	}
+	return nil
+}
+
 //取得閘刀閥狀態
 func getKnifeGeteValveStatus(data *md.KnifeGateValve, sendType string) string {
 	var statusData *md.Status

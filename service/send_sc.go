@@ -43,6 +43,7 @@ func sendKGV(confData conf.Configuration, sendType string) {
 			eqptKey := confData.Param.Redis.EquipmentKeys[0]
 			go eqpt.AddKnifeGeteValveListData(eqptKey, kgvData)
 		case model.Send_Log_Type:
+			go eqpt.AddKnifeGeteValveLogData(kgvData)
 		}
 	}
 }
@@ -57,6 +58,7 @@ func sendPump(confData conf.Configuration, sendType string) {
 			eqptKey := confData.Param.Redis.EquipmentKeys[1]
 			go eqpt.AddPumpListData(eqptKey, pData)
 		case model.Send_Log_Type:
+			go eqpt.AddPumpLogData(pData)
 		}
 	}
 }
@@ -71,6 +73,7 @@ func sendFLS(confData conf.Configuration, sendType string) {
 			eqptKey := confData.Param.Redis.EquipmentKeys[2]
 			go eqpt.AddFloatLevelSwitchListData(eqptKey, flsData)
 		case model.Send_Log_Type:
+			go eqpt.AddFloatLevelSwitchLogData(flsData)
 		}
 	}
 }
@@ -85,6 +88,7 @@ func sendLLG(confData conf.Configuration, sendType string) {
 			eqptKey := confData.Param.Redis.EquipmentKeys[3]
 			go eqpt.AddLiquidLevelGaugeListData(eqptKey, llgData)
 		case model.Send_Log_Type:
+			go eqpt.AddLiquidLevelGaugeLogData(llgData)
 		}
 	}
 }
@@ -99,6 +103,7 @@ func sendFM(confData conf.Configuration, sendType string) {
 			eqptKey := confData.Param.Redis.EquipmentKeys[4]
 			go eqpt.AddFlowMeterListData(eqptKey, fmData)
 		case model.Send_Log_Type:
+			go eqpt.AddFlowMeterLogData(fmData)
 		}
 	}
 }
@@ -113,6 +118,7 @@ func sendWQ(confData conf.Configuration, sendType string) {
 			eqptKey := confData.Param.Redis.EquipmentKeys[5]
 			go eqpt.AddWaterQualityListData(eqptKey, wqData)
 		case model.Send_Log_Type:
+			go eqpt.AddWaterQualityLogData(wqData)
 		}
 	}
 }
@@ -127,6 +133,7 @@ func sendMachine(confData conf.Configuration, sendType string) {
 			eqptKey := confData.Param.Redis.EquipmentKeys[6]
 			go eqpt.AddMachineListData(eqptKey, mData)
 		case model.Send_Log_Type:
+			go eqpt.AddMachineLogData(mData)
 		}
 	}
 }

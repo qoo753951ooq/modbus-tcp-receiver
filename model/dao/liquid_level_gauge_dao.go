@@ -6,6 +6,9 @@ import (
 	"modbus-tcp-receiver/util"
 	"strconv"
 	"time"
+
+	"github.com/astaxie/beego/orm"
+	"github.com/elgris/sqrl"
 )
 
 type LiquidLevelGaugeLog struct {
@@ -61,4 +64,43 @@ func (l *LiquidLevelGaugeLog) UpdateLiquidLevelGaugeList(eqptListKey string) err
 
 	err := db.RedisHashSet(key, update)
 	return err
+}
+
+func (l *LiquidLevelGaugeLog) InsertLiquidLevelGaugeLog() (int64, error) {
+
+	builder := sqrl.
+		Insert(`liquid_level_gauge_logs.liquid_level_gauge_log`).
+		Columns(`id, liquid, datatime`).
+		Values(l.Id, l.Liquid, l.Datatime)
+
+	if l.Level != model.Not_Equipment_Field_Status {
+		builder.Columns(`level`)
+		builder.Values(l.Level)
+	}
+
+	if l.Status != model.Not_Equipment_Field_Status {
+		builder.Columns(`status`)
+		builder.Values(l.Status)
+	}
+
+	if l.LiquidHighAlarm != model.Not_Equipment_Field_Value {
+		builder.Columns(`liquid_high_alarm`)
+		builder.Values(l.LiquidHighAlarm)
+	}
+
+	if l.LiquidLowAlarm != model.Not_Equipment_Field_Value {
+		builder.Columns(`liquid_low_alarm`)
+		builder.Values(l.LiquidLowAlarm)
+	}
+
+	sqlStatement, args, _ := builder.ToSql()
+
+	result, err := orm.NewOrm().Raw(sqlStatement, args).Exec()
+
+	if err != nil {
+		return 0, err
+	} else {
+		num, _ := result.RowsAffected()
+		return num, nil
+	}
 }

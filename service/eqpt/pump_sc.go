@@ -36,6 +36,20 @@ func AddPumpListData(eqptKey string, pData dao.PumpLog) error {
 	return nil
 }
 
+func AddPumpLogData(pData dao.PumpLog) error {
+
+	util.AddPumpLog.Lock()
+
+	_, err := pData.InsertPumpLog()
+
+	util.AddPumpLog.Unlock()
+
+	if err != nil {
+		return errors.New(util.CombineString(strconv.Itoa(pData.Id), " pg insert failure"))
+	}
+	return nil
+}
+
 //取得泵浦狀態
 func getPumpStatus(data *md.Pump, sendType string) string {
 	var statusData *md.Status

@@ -36,6 +36,21 @@ func AddMachineListData(eqptKey string, mData dao.MachineLog) error {
 	return nil
 }
 
+func AddMachineLogData(mData dao.MachineLog) error {
+
+	util.AddMachineLog.Lock()
+
+	_, err := mData.InsertMachineLog()
+
+	util.AddMachineLog.Unlock()
+
+	if err != nil {
+		return errors.New(util.CombineString(strconv.Itoa(mData.Id), " pg insert failure"))
+	}
+
+	return nil
+}
+
 //取得機器狀態
 func getMachineStatus(data *md.Machine, sendType string) string {
 	var statusData *md.Status

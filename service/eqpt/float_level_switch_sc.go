@@ -38,6 +38,20 @@ func AddFloatLevelSwitchListData(eqptKey string, flsData dao.FloatLevelSwitchLog
 	return nil
 }
 
+func AddFloatLevelSwitchLogData(flsData dao.FloatLevelSwitchLog) error {
+
+	util.AddFloatLevelSwitchLog.Lock()
+
+	_, err := flsData.InsertFloatLevelSwitchLog()
+
+	util.AddFloatLevelSwitchLog.Unlock()
+
+	if err != nil {
+		return errors.New(util.CombineString(strconv.Itoa(flsData.Id), " pg insert failure"))
+	}
+	return nil
+}
+
 //取得液位開關level(水位高度)狀態
 func getFloatLevelSwitchStatusForLevel(data *md.FloatLevelSwitch, sendType string) string {
 	var levelData *md.Status
